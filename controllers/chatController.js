@@ -18,20 +18,20 @@ export function updateUserActivity(userId) {
 /*Login*/
 
 export const loginUser = async (req, res) => {
-  const { correo, contrasena } = req.body;
+  const { email, password } = req.body;
 
   try {
-      const validateUser = await Usuarios.findOne({ correo, contrasena });
+      const validateUser = await Usuarios.findOne({ email, password });
 
       if (validateUser) {
-          console.log("Login exitoso para:", correo);
+          console.log("Login exitoso para:", email);
           return res.json({
               success: true,
               message: 'Inicio de Sesion Exitoso!',
               user: {
                   _id: validateUser._id,  //Se agrega User _id.  
-                  correo: validateUser.correo,
-                  nombre: validateUser.nombre,
+                  email: validateUser.email,
+                  name: validateUser.name,
                   rol: validateUser.rol,
               },
           });
@@ -47,12 +47,12 @@ export const loginUser = async (req, res) => {
 /*Crear usuario y admin*/
 export const createUser = async (req, res) => {
   try {
-    const { nombre, correo, contrasena, rol } = req.body; 
+    const { name, email, password, rol } = req.body; 
 
     const nuevoUsuario = new Usuarios({ 
-      nombre, 
-      correo, 
-      contrasena, 
+      name, 
+      email, 
+      password, 
       rol
     });
 
@@ -76,8 +76,50 @@ export const getUsuario = async (req, res) => {
   }
 };
 
+///////////////////////////////////////////// Crear venta  /////////////////////////////////////////////////////////////////////
+
+export const createVenta = async (req, res) => {
+  try {
+    let { producto, valor, userId } = req.body;
+
+    const nuevaVenta = new Venta({ 
+      producto, 
+      valor,
+      userId,
+      fechaReg: new Date()
+    });
+
+    await nuevaVenta.save();
+    res.status(201).json(nuevaVenta);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear la venta' });
+  }
+};
+
+///////////////////////////////////////////// Obtener las Ventas /////////////////////////////////////////////////////////////////////
+
+export const getVenta = async (req, res) => {
+  try {
+    const ventas = await Venta.find(); // Obtiene todas las ventas sin filtro
+    res.json(ventas);
+  } catch (error) {
+    console.error('Error al obtener las ventas:', error);
+    res.status(500).json({ error: 'Error en el servidor al obtener las ventas' });
+  }
+};
+
 
 ////////////////////////////////////////
+
+//////////////////////////////////////// 
+
+//////////////////////////////////////// 
+
+//////////////////////////////////////// 
+
+//////////////////////////////////////// 
+
+
 
 // Configurar OpenAI con manejo de errores mejorado
 let openai;
@@ -213,7 +255,7 @@ export const generateAndSendSummary = async (userId, PORT) => {
       `🗨️ ${conv.prompt}\n💬 ${conv.response}`
     ).join('\n\n') || 'No hubo conversación registrada hoy.';
 
-    const { data: users } = await axios.get(`https://sommer-back-steel.vercel.app/api/chat/usuarios`);
+    //const { data: users } = await axios.get(`https://sommer-back-steel.vercel.app/api/chat/usuarios`); este fue el ultimo documentado
     //const { data: users } = await axios.get(`http://localhost:${PORT}/api/chat/usuarios`);
     const user = users.find(u =>
       u._id === userId || u._id?.toString() === userId || u.correo === userId

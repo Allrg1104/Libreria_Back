@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 /*Esquema usuario y admin */
 
 const usuariosSchema = new mongoose.Schema({
-    nombre: String,
-    correo: String,
-    contrasena: String,
+    name: String,
+    email: String,
+    password: String,
     rol: String
 });
 

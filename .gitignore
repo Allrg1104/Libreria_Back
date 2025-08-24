@@ -1,0 +1,14 @@
+# Ignorar node_modules (dependencias en proyectos Node.js)
+node_modules/
+
+# Ignorar carpeta de logs
+logs/
+
+# Ignorar carpeta de compilados
+dist/
+
+# Ignorar archivo de configuración local
+config/local.json
+
+# Ignorar todo lo que termine en .env
+*.env
