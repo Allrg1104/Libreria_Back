@@ -83,6 +83,10 @@ export const createVenta = async (req, res) => {
   try {
     let { producto, cantidad, precioUnitario} = req.body;
 
+    if (!producto || !cantidad) {
+            return res.status(400).json({ error: "Faltan campos requeridos" });
+        }
+
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
@@ -100,7 +104,7 @@ export const createVenta = async (req, res) => {
 
 export const getVenta = async (req, res) => {
   try {
-    const ventas = await Venta.find(); // Obtiene todas las ventas sin filtro
+    const ventas = await Ventas.find(); // Obtiene todas las ventas sin filtro
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener las ventas:', error);
