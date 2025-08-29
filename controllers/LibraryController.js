@@ -106,7 +106,8 @@ export const createVenta = async (req, res) => {
 
 export const getVenta = async (req, res) => {
   try {
-    const ventas = await Ventas.find(); // Obtiene todas las ventas sin filtro
+    const ventas = await Ventas.find().populate("id", "name email rol");
+    //const ventas = await Ventas.find(); // Obtiene todas las ventas sin filtro
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener las ventas:', error);
