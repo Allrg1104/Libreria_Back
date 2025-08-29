@@ -1,5 +1,5 @@
 import express from 'express';
-import {loginUser,createUser,generateChatResponse,getUsuario,getConversationHistory,logoutUser,createVenta,getVenta} from '../controllers/chatController.js';
+import {loginUser,createUser,generateChatResponse,getUsuario,getConversationHistory,logoutUser,createVenta,getVenta} from '../controllers/LibraryController.js';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.post('/newUser', createUser);
 router.get('/usuarios', getUsuario);
 router.post('/logout', logoutUser);
 router.post('/newventa', createVenta);
-router.post('/ventas', listarVentas);
+//router.get('/ventas', listarVentas);
 
 router.post('/', generateChatResponse);
 router.get('/history/:userId', getConversationHistory);

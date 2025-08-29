@@ -80,17 +80,13 @@ export const getUsuario = async (req, res) => {
 
 export const createVenta = async (req, res) => {
   try {
-    let { producto, cantidad, precioUnitario, userId } = req.body;
-
-    if (!producto || !cantidad || !usuario) {
-            return res.status(400).json({ error: "Faltan campos requeridos" });
+    let { producto, cantidad, precioUnitario} = req.body;
 
     const nuevaVenta = new Venta({ 
       producto, 
       cantidad,
-      userId,
-      fechaReg: new Date(),
-      precioUnitario: precioUnitario || 50000 // 👈 si no mandan precio, usa 50000
+      precioUnitario,
+      fechaReg: new Date()
     });
 
     await nuevaVenta.save();
@@ -102,9 +98,9 @@ export const createVenta = async (req, res) => {
 
 ///////////////////////////////////////////// Obtener las Ventas /////////////////////////////////////////////////////////////////////
 
-export const listarVentas = async (req, res) => {
+export const getVenta = async (req, res) => {
   try {
-    const ventas = await Venta.find().populate("usuario", "name email rol"); // Obtiene todas las ventas sin filtro
+    const ventas = await Venta.find(); // Obtiene todas las ventas sin filtro
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener las ventas:', error);
