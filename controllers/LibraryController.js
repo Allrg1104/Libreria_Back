@@ -88,6 +88,10 @@ export const createVenta = async (req, res) => {
 
     const total = cantidad * precioUnitario;
 
+    if (!producto || !cantidad) {
+            return res.status(400).json({ error: "Faltan campos requeridos" });
+        }
+
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
