@@ -5,7 +5,7 @@ const ventasSchema = new mongoose.Schema({
   cantidad: Number,
   precioUnitario: { type: Number, default: 50000},
   fechaReg: { type: Date, default: Date.now },
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios', required: true }
+  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios' }
 });
 
 // Antes de guardar, calcular el total automáticamente
