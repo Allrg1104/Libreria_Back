@@ -77,32 +77,19 @@ export const getUsuario = async (req, res) => {
 
 export const createVenta = async (req, res) => {
   try {
-<<<<<<< HEAD
     let { producto, cantidad, precioUnitario } = req.body;
 
+    // Asegurarse que sean números
     cantidad = Number(cantidad);
     precioUnitario = Number(precioUnitario);
 
     const total = cantidad * precioUnitario;
-=======
-    let { producto, cantidad,id, precioUnitario} = req.body;
->>>>>>> 7a7fe05212e70a42e0d1065b5aef0897daef9257
-
-    if (!producto || !cantidad ||!id) {
-            return res.status(400).json({ error: "Faltan campos requeridos" });
-        }
 
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
-<<<<<<< HEAD
       precioUnitario,
       total
-=======
-      precioUnitario: precioUnitario || 50000,
-      id
-
->>>>>>> 7a7fe05212e70a42e0d1065b5aef0897daef9257
     });
 
     await nuevaVenta.save();
@@ -112,6 +99,7 @@ export const createVenta = async (req, res) => {
     res.status(500).json({ error: 'Error al crear la venta' });
   }
 };
+
 
 /*Listar ventas*/
 
