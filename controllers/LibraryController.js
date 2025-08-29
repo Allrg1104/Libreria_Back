@@ -112,3 +112,74 @@ export const getVenta = async (req, res) => {
     res.status(500).json({ error: 'Error en el servidor al obtener las ventas' });
   }
 };
+
+/*Obtener DashBoard*/
+
+export const obtenerDashboard = async (req, res, next) => {
+  try {
+    // Traer ventas y poblar con el usuario real
+    const ventas = await Ventas.find().populate("id");
+
+    // Totales globales
+    const totalCantidad = ventas.reduce((sum, v) => sum + v.cantidad, 0);
+    const totalValor = ventas.reduce((sum, v) => sum + v.total, 0);
+
+    // Metas y progreso (puedes parametrizar estos valores)
+    const metas = {
+      cantidad: 500,
+      valor: 2000000,
+      progresoCantidad: totalCantidad,
+      progresoValor: totalValor,
+    };
+
+    // Top productos
+    const productosPorCantidad = {};
+    const productosPorValor = {};
+
+    ventas.forEach((v) => {
+      if (!productosPorCantidad[v.producto]) {
+        productosPorCantidad[v.producto] = { producto: v.producto, cantidad: 0 };
+      }
+      if (!productosPorValor[v.producto]) {
+        productosPorValor[v.producto] = { producto: v.producto, valor: 0 };
+      }
+      productosPorCantidad[v.producto].cantidad += v.cantidad;
+      productosPorValor[v.producto].valor += v.total;
+    });
+
+    const topPorCantidad = Object.values(productosPorCantidad)
+      .sort((a, b) => b.cantidad - a.cantidad)
+      .slice(0, 10);
+
+    const topPorValor = Object.values(productosPorValor)
+      .sort((a, b) => b.valor - a.valor)
+      .slice(0, 10);
+
+    // Ventas por usuario y producto
+    const ventasPorUsuario = {};
+    ventas.forEach((v) => {
+      const usuario = v.id?.name || "Desconocido"; // 🔹 ahora usamos v.id (relación con Usuarios)
+      if (!ventasPorUsuario[usuario]) {
+        ventasPorUsuario[usuario] = {};
+      }
+      if (!ventasPorUsuario[usuario][v.producto]) {
+        ventasPorUsuario[usuario][v.producto] = {
+          producto: v.producto,
+          cantidad: 0,
+          valor: 0,
+        };
+      }
+      ventasPorUsuario[usuario][v.producto].cantidad += v.cantidad;
+      ventasPorUsuario[usuario][v.producto].valor += v.total;
+    });
+
+    res.json({
+      metas,
+      topPorCantidad,
+      topPorValor,
+      ventasPorUsuario,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
