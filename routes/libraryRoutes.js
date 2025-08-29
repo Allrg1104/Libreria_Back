@@ -8,7 +8,7 @@ router.post('/newUser', createUser);
 router.get('/usuarios', getUsuario);
 router.post('/logout', logoutUser);
 router.post('/newventa', createVenta);
-//router.get('/ventas', listarVentas);
+router.get('/ventas', getVenta);
 
 router.post('/', generateChatResponse);
 router.get('/history/:userId', getConversationHistory);

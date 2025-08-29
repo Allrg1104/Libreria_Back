@@ -81,26 +81,34 @@ export const getUsuario = async (req, res) => {
 
 export const createVenta = async (req, res) => {
   try {
-    let { producto, cantidad, precioUnitario} = req.body;
+    let { producto, cantidad, precioUnitario } = req.body;
+
+    cantidad = Number(cantidad);
+    precioUnitario = Number(precioUnitario);
+
+    const total = cantidad * precioUnitario;
 
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
-      precioUnitario
+      precioUnitario,
+      total
     });
 
     await nuevaVenta.save();
     res.status(201).json(nuevaVenta);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error al crear la venta' });
   }
 };
+
 
 ///////////////////////////////////////////// Obtener las Ventas /////////////////////////////////////////////////////////////////////
 
 export const getVenta = async (req, res) => {
   try {
-    const ventas = await Venta.find(); // Obtiene todas las ventas sin filtro
+    const ventas = await Ventas.find(); // Obtiene todas las ventas sin filtro
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener las ventas:', error);
