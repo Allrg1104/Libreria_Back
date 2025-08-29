@@ -81,16 +81,18 @@ export const getUsuario = async (req, res) => {
 
 export const createVenta = async (req, res) => {
   try {
-    let { producto, cantidad, precioUnitario} = req.body;
+    let { producto, cantidad,id, precioUnitario} = req.body;
 
-    if (!producto || !cantidad) {
+    if (!producto || !cantidad ||!id) {
             return res.status(400).json({ error: "Faltan campos requeridos" });
         }
 
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
-      precioUnitario
+      precioUnitario: precioUnitario || 50000,
+      id
+
     });
 
     await nuevaVenta.save();
