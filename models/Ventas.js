@@ -6,7 +6,7 @@ const ventasSchema = new mongoose.Schema({
   precioUnitario: Number,
   total: Number,
   fechaReg: { type: Date, default: Date.now },
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios' }
+  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios', require:true}
 });
 
 const Ventas = mongoose.model('Ventas', ventasSchema);
