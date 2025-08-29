@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import Usuarios from '../models/Usuarios.js';
 import Conversation from '../models/Conversation.js';
+import Ventas from '../models/Ventas.js';
 import transporter from '../config/mailConfig.js'; 
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -82,11 +83,10 @@ export const createVenta = async (req, res) => {
   try {
     let { producto, cantidad, precioUnitario} = req.body;
 
-    const nuevaVenta = new Venta({ 
+    const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
-      precioUnitario,
-      fechaReg: new Date()
+      precioUnitario
     });
 
     await nuevaVenta.save();
