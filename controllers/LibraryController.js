@@ -120,22 +120,23 @@ export const getVenta = async (req, res) => {
 
 export const obtenerDashboard = async (req, res, next) => {
   try {
-    // Traer ventas y poblar con el usuario real
     const ventas = await Ventas.find().populate("id_vendedor");
 
     // Totales globales
     const totalCantidad = ventas.reduce((sum, v) => sum + v.cantidad, 0);
     const totalValor = ventas.reduce((sum, v) => sum + v.total, 0);
 
-    // Metas y progreso (puedes parametrizar estos valores)
+    // Función para formatear números con puntos de mil
+    const formatNumber = (num) => num.toLocaleString("es-CO");
+
     const metas = {
       cantidad: 500,
       valor: 2000000,
-      progresoCantidad: totalCantidad,
-      progresoValor: totalValor,
+      progresoCantidad: formatNumber(totalCantidad),
+      progresoValor: formatNumber(totalValor),
     };
 
-    // Top productos
+    // Top productos por cantidad y valor
     const productosPorCantidad = {};
     const productosPorValor = {};
 
@@ -156,12 +157,20 @@ export const obtenerDashboard = async (req, res, next) => {
 
     const topPorValor = Object.values(productosPorValor)
       .sort((a, b) => b.valor - a.valor)
-      .slice(0, 10);
+      .slice(0, 10)
+      .map((p) => ({
+        ...p,
+        valor: formatNumber(p.valor), // aplicar formato
+      }));
 
     // Ventas por usuario y producto
     const ventasPorUsuario = {};
+    const resumenPorVendedor = {};
+
     ventas.forEach((v) => {
-      const usuario = v.id_vendedor?.name || "Desconocido"; // 🔹 ahora usamos v.id (relación con Usuarios)
+      const usuario = v.id_vendedor?.name || "Desconocido";
+
+      // Detalle por producto
       if (!ventasPorUsuario[usuario]) {
         ventasPorUsuario[usuario] = {};
       }
@@ -174,13 +183,31 @@ export const obtenerDashboard = async (req, res, next) => {
       }
       ventasPorUsuario[usuario][v.producto].cantidad += v.cantidad;
       ventasPorUsuario[usuario][v.producto].valor += v.total;
+
+      // Resumen para ranking top vendedores
+      if (!resumenPorVendedor[usuario]) {
+        resumenPorVendedor[usuario] = { vendedor: usuario, cantidad: 0, valor: 0 };
+      }
+      resumenPorVendedor[usuario].cantidad += v.cantidad;
+      resumenPorVendedor[usuario].valor += v.total;
     });
+
+    // Top 5 vendedores
+    const topVendedores = Object.values(resumenPorVendedor)
+      .sort((a, b) => b.valor - a.valor)
+      .slice(0, 5)
+      .map((v) => ({
+        vendedor: v.vendedor,
+        cantidad: formatNumber(v.cantidad),
+        valor: formatNumber(v.valor),
+      }));
 
     res.json({
       metas,
       topPorCantidad,
       topPorValor,
       ventasPorUsuario,
+      topVendedores, // 🔹 agregado
     });
   } catch (error) {
     next(error);
