@@ -106,7 +106,7 @@ export const createVenta = async (req, res) => {
 
 export const getVenta = async (req, res) => {
   try {
-    const ventas = await Ventas.find().populate("id", "name email rol");
+    const ventas = await Ventas.find().populate("id_vendedor", "name email rol");
     //const ventas = await Ventas.find(); // Obtiene todas las ventas sin filtro
     res.json(ventas);
   } catch (error) {
@@ -120,7 +120,7 @@ export const getVenta = async (req, res) => {
 export const obtenerDashboard = async (req, res, next) => {
   try {
     // Traer ventas y poblar con el usuario real
-    const ventas = await Ventas.find().populate("id");
+    const ventas = await Ventas.find().populate("id_vendedor");
 
     // Totales globales
     const totalCantidad = ventas.reduce((sum, v) => sum + v.cantidad, 0);
@@ -160,7 +160,7 @@ export const obtenerDashboard = async (req, res, next) => {
     // Ventas por usuario y producto
     const ventasPorUsuario = {};
     ventas.forEach((v) => {
-      const usuario = v.id?.name || "Desconocido"; // 🔹 ahora usamos v.id (relación con Usuarios)
+      const usuario = v.id_vendedor?.name || "Desconocido"; // 🔹 ahora usamos v.id (relación con Usuarios)
       if (!ventasPorUsuario[usuario]) {
         ventasPorUsuario[usuario] = {};
       }
