@@ -94,7 +94,7 @@ export const createVenta = async (req, res) => {
     });
 
     await nuevaVenta.save();
-    res.status(201).json(nuevaVenta);
+    res.status(201).json({ success: true, venta: nuevaVenta });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al crear la venta' });
