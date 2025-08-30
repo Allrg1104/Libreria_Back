@@ -75,31 +75,32 @@ export const getUsuario = async (req, res) => {
 
 /*Craar Una Venta*/
 
-export const createVenta = async (req, res) => {
-  try {
-    let { producto, cantidad, id_vendedor,precioUnitario } = req.body;
+  export const createVenta = async (req, res) => {
+    try {
+      let { producto, cantidad, id_vendedor,nameVendedor,precioUnitario } = req.body;
 
-    // Asegurarse que sean números
-    cantidad = Number(cantidad);
-    precioUnitario = Number(precioUnitario);
+      // Asegurarse que sean números
+      cantidad = Number(cantidad);
+      precioUnitario = Number(precioUnitario);
 
-    const total = cantidad * precioUnitario;
+      const total = cantidad * precioUnitario;
 
-    const nuevaVenta = new Ventas({ 
-      producto, 
-      cantidad,
-      id_vendedor,
-      precioUnitario,
-      total
-    });
+      const nuevaVenta = new Ventas({ 
+        producto, 
+        cantidad,
+        id_vendedor,
+        nameVendedor,
+        precioUnitario,
+        total
+      });
 
-    await nuevaVenta.save();
-    res.status(201).json({ success: true, venta: nuevaVenta });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear la venta' });
-  }
-};
+      await nuevaVenta.save();
+      res.status(201).json({ success: true, venta: nuevaVenta });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al crear la venta' });
+    }
+  };
 
 
 /*Listar ventas*/
