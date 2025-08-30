@@ -1,4 +1,4 @@
- import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const ventasSchema = new mongoose.Schema({
   producto: String,
@@ -6,7 +6,7 @@ const ventasSchema = new mongoose.Schema({
   precioUnitario: Number,
   total: Number,
   fechaReg: { type: Date, default: Date.now },
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios'}
+  id_vendedor: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuarios', required: true }
 });
 
 const Ventas = mongoose.model('Ventas', ventasSchema);

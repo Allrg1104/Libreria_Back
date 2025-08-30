@@ -77,7 +77,7 @@ export const getUsuario = async (req, res) => {
 
 export const createVenta = async (req, res) => {
   try {
-    let { producto, cantidad, id,precioUnitario } = req.body;
+    let { producto, cantidad, id_vendedor,precioUnitario } = req.body;
 
     // Asegurarse que sean números
     cantidad = Number(cantidad);
@@ -88,7 +88,7 @@ export const createVenta = async (req, res) => {
     const nuevaVenta = new Ventas({ 
       producto, 
       cantidad,
-      id,
+      id_vendedor,
       precioUnitario,
       total
     });
